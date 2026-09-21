@@ -1,0 +1,12 @@
+# pnpm runs an install-time `pnpm install` inside the fetched copy of a
+# git-hosted dependency, and THAT install reads this file as its workspace root —
+# never the consumer profile's settings. With pnpm's default autoInstallPeers,
+# that nested install resolves the peerDependencies below
+# (@deepseek-ai/dsh-tools → @deepseek-ai/dsh-type-meta, which the npm registry
+# does not publish) and every `github:` install of this package dies with
+# ERR_PNPM_FETCH_404. Turning peer auto-install off here is what makes the git
+# install route work; the host supplies those peers at runtime anyway.
+packages:
+  - .
+
+autoInstallPeers: false

@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 /**
- * Self-contained build for git/path dependency installs (package.json `prepare`).
+ * Self-contained build for the injector bundles (package.json `build`).
  *
- * npm/pnpm run `prepare` automatically when a `github:`/`git+` dependency is
- * installed, which is exactly the case that previously failed with
- * "Cannot find module ...\lib\index.js": the fetched repo has no build output
- * and scripts/build.sh demanded DSH_CHECKOUT. This script builds the
- * self-contained `lib/` (host + client bundles) with the already-committed
- * tsdown.config.ts — no DSH_CHECKOUT, no source checkout needed.
+ * The built `lib/` is committed, so no install route (git, path, registry)
+ * needs a build step — and a `prepare` script here would force pnpm to demand
+ * an allowBuilds entry for every git install. `npm run build` forces a rebuild;
+ * without `--force` the script is a no-op when lib/ is already present.
  *
  * Strategy:
  *   1. Use a locally installed tsdown (devDependency, installed for git deps
@@ -26,6 +24,7 @@ import { fileURLToPath } from 'node:url'
 const ROOT = dirname(dirname(fileURLToPath(import.meta.url)))
 const TSDOWN_RANGE = 'tsdown@^0.22.14'
 const REQUIRED = ['lib/index.js', 'lib/client.js']
+const FORCE = process.argv.includes('--force')
 
 function run(command, args, cwd = ROOT) {
   const result = spawnSync(command, args, { cwd, stdio: 'inherit', shell: process.platform === 'win32' })
@@ -48,7 +47,7 @@ function verifyOutputs() {
 }
 
 function main() {
-  if (verifyOutputs()) {
+  if (!FORCE && verifyOutputs()) {
     console.log('[prepare] lib/ already built — skipping tsdown run')
     return 0
   }

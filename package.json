@@ -4,7 +4,7 @@
   "description": "dsh-routing-suite 分发入口：DSH 超级模组注入器（BepInEx 式运行时注入，免重启）+ router-standard 预设仓库。插件入口为 injector/，预设位于 preset/。",
   "private": true,
   "scripts": {
-    "prepare": "node injector/scripts/prepare.mjs"
+    "build": "node injector/scripts/prepare.mjs --force"
   },
   "type": "module",
   "main": "./injector/lib/index.js",
