@@ -39,8 +39,8 @@
   },
   "peerDependencies": {
     "@deepseek-ai/dsh-tools": ">=0.0.1-rc <2",
-    "cordis": ">=4.0.0-rc <5",
-    "schemastery": "^3.18.0"
+    "@deepseek-ai/cordis": ">=4.0.0-rc <5",
+    "@deepseek-ai/schemastery": "^3.18.2"
   },
   "devDependencies": {
     "@deepseek-ai/cordis-plugin-loader": "^1.0.2",
